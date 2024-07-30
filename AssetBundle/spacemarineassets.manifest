@@ -1,0 +1,79 @@
+ManifestFileVersion: 0
+CRC: 2517012560
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d759bd062390af451fc669d300b347bd
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4bcc24e66bd7027be1075086f217b5da
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e333c9e3a2edcda42bd6b232f86c7398, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6aa8f504cc1f3b94197fa1986901745a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c36abf5b63671634383147a0c7ef96bc, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 319
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/SpaceMarineAssets/animations/displayAnimator.controller
+- Assets/SpaceMarineAssets/marineMdl.prefab
+- Assets/SpaceMarineAssets/icons/portrait.png
+- Assets/SpaceMarineAssets/ui/crosshairNib.png
+- Assets/SpaceMarineAssets/ui/crosshairOff.png
+- Assets/SpaceMarineAssets/ui/crosshairOn.png
+- Assets/SpaceMarineAssets/icons/primary.png
+- Assets/SpaceMarineAssets/animations/upper_body.mask
+- Assets/SpaceMarineAssets/icons/secondary.png
+- Assets/SpaceMarineAssets/materials/diffuse.mat
+- Assets/SpaceMarineAssets/animations/animator.controller
+- Assets/SpaceMarineAssets/icons/special.png
+- Assets/SpaceMarineAssets/icons/utility.png
+- Assets/SpaceMarineAssets/grenade.prefab
+- Assets/SpaceMarineAssets/animations/aim.mask
+- Assets/SpaceMarineAssets/icons/skinIcon.png
+- Assets/SpaceMarineAssets/materials/sm_d.png
+- Assets/SpaceMarineAssets/icons/passive.png
+- Assets/SpaceMarineAssets/ui/crosshair.prefab
+Dependencies: []
