@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2517012560
+CRC: 763505371
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d759bd062390af451fc669d300b347bd
+    Hash: 0680afe9f009a0dec3228f80242d20b0
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4bcc24e66bd7027be1075086f217b5da
@@ -64,6 +64,7 @@ Assets:
 - Assets/SpaceMarineAssets/ui/crosshairOff.png
 - Assets/SpaceMarineAssets/ui/crosshairOn.png
 - Assets/SpaceMarineAssets/icons/primary.png
+- Assets/SpaceMarineAssets/icons/buffIcon.png
 - Assets/SpaceMarineAssets/animations/upper_body.mask
 - Assets/SpaceMarineAssets/icons/secondary.png
 - Assets/SpaceMarineAssets/materials/diffuse.mat

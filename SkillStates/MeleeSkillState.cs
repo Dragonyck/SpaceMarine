@@ -22,7 +22,7 @@ using UnityEngine.Events;
 
 namespace SpaceMarine
 {
-    class MeleeSkillState : BaseSkillState
+    class MeleeSkillState : BaseCharacterMain
     {
         public float attackDuration;
         public float earlyExitDuration;
@@ -60,6 +60,7 @@ namespace SpaceMarine
         private bool hasAnimParameter;
         private float attackSpeedScaling;
         public Animator animator;
+        public List<HurtBox> hitList = new List<HurtBox>();
 
         public override void OnEnter()
         {
@@ -167,7 +168,7 @@ namespace SpaceMarine
             if (animator && animator.GetFloat(mecanimHitboxActiveParameter) > 0.1f)
             {
                 attack.forceVector = base.characterDirection ? base.characterDirection.forward : base.transform.forward * forceMagnitude + bonusForce;
-                result = attack.Fire(null);
+                result = attack.Fire(hitList);
             }
             return result;
         }

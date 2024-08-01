@@ -35,7 +35,7 @@ namespace SpaceMarine
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (NetworkServer.active && base.fixedAge >= 1)
+            if (NetworkServer.active && base.fixedAge >= 5)
             {
                 base.fixedAge = 0;
 

@@ -30,6 +30,7 @@ namespace SpaceMarine
     [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
     [BepInDependency(R2API.PrefabAPI.PluginGUID)]
     [BepInDependency(R2API.SoundAPI.PluginGUID)]
+    [BepInDependency(R2API.RecalculateStatsAPI.PluginGUID)]
     [BepInPlugin(MODUID, MODNAME, VERSION)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class MainPlugin : BaseUnityPlugin
@@ -40,7 +41,7 @@ namespace SpaceMarine
         public const string SURVIVORNAME = "SpaceMarine";
         public const string SURVIVORNAMEKEY = "SPACEMARINE";
         public static GameObject characterPrefab;
-        private static readonly Color characterColor = new Color32(11, 125, 172, 255);
+        public static readonly Color characterColor = new Color32(11, 125, 172, 255);
 
         private void Awake()
         {
@@ -97,7 +98,7 @@ namespace SpaceMarine
             bodyComponent.rootMotionInMainState = false;
             bodyComponent.mainRootSpeed = 0;
             bodyComponent.baseMaxHealth = 110;
-            bodyComponent.levelMaxHealth = 35;
+            bodyComponent.levelMaxHealth = 50;
             bodyComponent.baseRegen = 1.5f;
             bodyComponent.levelRegen = 0.2f;
             bodyComponent.baseMaxShield = 0;
@@ -114,7 +115,7 @@ namespace SpaceMarine
             bodyComponent.baseCrit = 1;
             bodyComponent.levelCrit = 0;
             bodyComponent.baseArmor = 0;
-            bodyComponent.levelArmor = 0;
+            bodyComponent.levelArmor = 1;
             bodyComponent.baseJumpCount = 1;
             bodyComponent.sprintingSpeedMultiplier = 1.45f;
             bodyComponent.wasLucky = false;
@@ -122,6 +123,7 @@ namespace SpaceMarine
             bodyComponent.aimOriginTransform = gameObject3.transform;
             bodyComponent.hullClassification = HullClassification.Human;
             bodyComponent.portraitIcon = Assets.MainAssetBundle.LoadAsset<Sprite>("portrait").texture;
+            bodyComponent._defaultCrosshairPrefab = Prefabs.crosshair;
             bodyComponent.isChampion = false;
             bodyComponent.currentVehicle = null;
             bodyComponent.skinIndex = 0U;
@@ -217,31 +219,37 @@ namespace SpaceMarine
             KinematicCharacterMotor kinematicCharacterMotor = characterPrefab.GetComponent<KinematicCharacterMotor>();
             kinematicCharacterMotor.CharacterController = characterMotor;
 
-            // RAGDOLL SETUP
-
-            /*var ragdollMaterial = Addressables.LoadAssetAsync<PhysicMaterial>("RoR2/Base/Common/physmatRagdoll.physicMaterial").WaitForCompletion();
+            var ragdollMaterial = Addressables.LoadAssetAsync<PhysicMaterial>("RoR2/Base/Common/physmatRagdoll.physicMaterial").WaitForCompletion();
             List<Transform> transforms = new List<Transform>();
             List<string> boneNames = new List<string>()
             {
-                "spine.005",
-                "thigh.L",
-                "shin.L",
-                "foot.L",
-                "thigh.R",
-                "shin.R",
-                "foot.R",
-                "stomach",
-                "spine",
-                "chest",
-                "head",
-                "shoulder.L",
-                "upper_arm.L",
-                "forearm.L",
-                "hand.L",
-                "shoulder.R",
-                "upper_arm.R",
-                "forearm.R",
-                "hand.R"
+                "BASE",
+                "DEF_hips",
+                "DEF_hipLegstretch.L",
+                "DEF_leg_upper.L",
+                "DEF_leg_lower.L",
+                "DEF_foot.L",
+                "DEF_hipRegstretch.R",
+                "DEF_leg_upper.R",
+                "DEF_leg_lower.R",
+                "DEF_foot.R",
+                "MECH_spine",
+                "MECH_spine_1",
+                "rig_spine_2",
+                "spine_top",
+                "DEF_neck",
+                "DEF_head",
+                "TWEAK_spine_2",
+                "DEF_spine_2",
+                "DEF_collar_L",
+                "DEF_arm_upper.L",
+                "DEF_arm_lower.L",
+                //"DEF_hand.L",
+                "DEF_collar_R",
+                "DEF_arm_upper.R",
+                "DEF_arm_lower.R",
+                //"DEF_hand.R",
+                "DEF_wpn_bolter_grip"
             };
             foreach (Transform t in model.GetComponentsInChildren<Transform>(true))
             {
@@ -257,7 +265,7 @@ namespace SpaceMarine
                     }
                     var bonecollider = g.AddComponent<CapsuleCollider>();
                     bonecollider.radius = 0.4f;
-                    bonecollider.height = 3.5f;
+                    bonecollider.height = 3.75f;
                     bonecollider.material = ragdollMaterial;
                     bonecollider.sharedMaterial = ragdollMaterial;
                     Rigidbody parentRigidBody = t.parent.GetComponent<Rigidbody>();
@@ -271,7 +279,9 @@ namespace SpaceMarine
                 }
             }
             var ragdoll = model.AddComponent<RagdollController>();
-            ragdoll.bones = transforms.ToArray();*/
+            ragdoll.bones = transforms.ToArray();
+
+            Utils.CreateHitbox("Dash", model.transform, Vector3.one * 8, new Vector3(0, 1.2f, 2));
 
             characterPrefab.GetComponent<Interactor>().maxInteractionDistance = 3f;
             characterPrefab.GetComponent<InteractionDriver>().highlightInteractor = true;
@@ -391,7 +401,8 @@ namespace SpaceMarine
             SkillLocator component = characterPrefab.GetComponent<SkillLocator>();
 
             LanguageAPI.Add(SURVIVORNAMEKEY + "_PASSIVE_NAME", "Iron Halo");
-            LanguageAPI.Add(SURVIVORNAMEKEY + "_PASSIVE_DESCRIPTION", "Slowly generate <style=cIsHealing>barrier</style> passively. Amount generated is a percentage of your <style=cIsHealth>health</style> equal to <style=cIsDamage>double</style> your current level.");
+            LanguageAPI.Add(SURVIVORNAMEKEY + "_PASSIVE_DESCRIPTION", "Slowly generate <style=cIsHealing>barrier</style> passively. Amount generated is a percentage of your <style=cIsHealth>health</style> equal to <style=cIsDamage>double</style> your current level." +
+                "Gain an additional style=cIsHealth>15 max health</style> and <style=cIsDamage>1 armor</style> per level.");
 
             component.passiveSkill.enabled = true;
             component.passiveSkill.skillNameToken = SURVIVORNAMEKEY + "_PASSIVE_NAME";
@@ -415,7 +426,7 @@ namespace SpaceMarine
             LanguageAPI.Add(SURVIVORNAMEKEY + "_M2", "Frag Grenades");//<style=cIsDamage></style> <style=cIsUtility></style> <style=cIsHealth></style> <style=cIsHealing></style> 
             LanguageAPI.Add(SURVIVORNAMEKEY + "_M2_DESCRIPTION", "Throw a grenade with a large blast radius dealing <style=cIsDamage></style>250% damage</style>.");
 
-            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Secondary), "Slide", 1, 5f, true, false, false, InterruptPriority.Any, true, true, false, 1, 1, 1,
+            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Secondary), "Weapon", 1, 5f, true, false, false, InterruptPriority.Skill, true, true, false, 1, 1, 1,
                 Assets.MainAssetBundle.LoadAsset<Sprite>("secondary"), SURVIVORNAMEKEY + "_M2_DESCRIPTION", SURVIVORNAMEKEY + "_M2", new string[] { "KEYWORD_HEAVY" });
             component.secondary = Utils.NewGenericSkill(characterPrefab, SkillDef);
 
@@ -437,7 +448,7 @@ namespace SpaceMarine
             LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC", "Iron Resolve");//<style=cIsDamage></style> <style=cIsUtility></style> <style=cIsHealth></style> <style=cIsHealing></style> 
             LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", "Become <style=cIsDamage>immune</style> to knockback effects, and create a regeneration field around yourself that <style=cIsHealing>heals 10%</style> of your <style=cIsHealing>max health</style> per second for <style=cIsUtility>6s + 0.1s</style> per level.");
 
-            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Special), "Slide", 1, 8f, true, false, false, InterruptPriority.Any, true, true, false, 1, 1, 1,
+            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Special), "Slide", 1, 30f, true, false, false, InterruptPriority.Any, true, true, false, 1, 1, 1,
                 Assets.MainAssetBundle.LoadAsset<Sprite>("special"), SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", SURVIVORNAMEKEY + "_SPEC");
             component.special = Utils.NewGenericSkill(characterPrefab, SkillDef);
 
