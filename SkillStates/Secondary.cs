@@ -42,6 +42,8 @@ namespace SpaceMarine
             animator.SetFloat("Curve", 0);
 
             duration = baseDuration / base.attackSpeedStat;
+
+            AkSoundEngine.PostEvent(Sounds.Play_SpaceMarine_Grenade_Throw, base.gameObject);
         }
         public override void FixedUpdate()
         {

@@ -26,17 +26,22 @@ namespace SpaceMarine
     {
         private Vector3 direction;
         public override float baseAttackDuration => 3;
-        public override string animParameter => "walkSpeed";
-        public override float forceMagnitude => 600;
+        public override string animParameter => "Utility";
+        public override float forceMagnitude => 2600;
         public override float damageCoefficient => 2.5f;
-        public override GameObject hitEffectPrefab => Prefabs.Load<GameObject>("RoR2/Base/Common/VFX/OmniImpactVFXSlash.prefab");
+        public override GameObject hitEffectPrefab => Prefabs.impact;
         public override GameObject swingEffectPrefab => null;
         public override DamageType damageType => DamageType.Generic;
         public override string hitBoxGroupName => "Dash";
+        public override float maxAttackSpeedScaling => 1;
+        public override bool forceFire => false;
         public override void OnEnter()
         {
             base.OnEnter();
-            animator.SetFloat("Curve", 1);
+
+            animator.SetBool("charging", true);
+            base.PlayAnimation("Gesture, Override", "Charge", "Utility", baseAttackDuration);
+
             if (base.isAuthority)
             {
                 direction = base.inputBank.aimDirection;
@@ -45,19 +50,25 @@ namespace SpaceMarine
             }
             base.characterDirection.forward = direction;
             base.modelLocator.normalizeToFloor = true;
+
+            if (NetworkServer.active)
+            {
+                base.characterBody.AddBuff(Prefabs.speed);
+            }
         }
         public override void FixedUpdate()
         {
-            if (base.isAuthority)
-            {
-                overlapAttack.damage = base.damageStat * (damageCoefficient * GetDamageBoostFromSpeed());
-            }
             base.FixedUpdate();
-            animator.SetFloat("Curve", 1);
             direction = base.inputBank.aimDirection;
             UpdateDirection();
             if (base.isAuthority)
             {
+                if (base.fixedAge >= 0.25f && base.inputBank.skill3.down)
+                {
+                    outer.SetNextState(new UtilitySwipe());
+                    return;
+                }
+
                 base.characterBody.isSprinting = true;
 
                 if (!isInHitPause)
@@ -95,27 +106,18 @@ namespace SpaceMarine
                                     num = component2.mass;
                                 }
                             }
-                            if (num >= 300)
+                            if (num >= 250)
                             {
-                                outer.SetNextStateToMain();
-                                return;
-                                /*this.outer.SetNextState(new ToolbotDashImpact
+                                this.outer.SetNextState(new UtilityImpact
                                 {
-                                    victimHealthComponent = hurtBox.healthComponent,
-                                    idealDirection = this.idealDirection,
-                                    damageBoostFromSpeed = this.GetDamageBoostFromSpeed(),
-                                    isCrit = this.attack.isCrit
+                                    victim = hurtBox.healthComponent
                                 });
-                                return;*/
+                                return;
                             }
                         }
                     }
                 }
             }
-        }
-        private float GetDamageBoostFromSpeed()
-        {
-            return Mathf.Max(1f, base.characterBody.moveSpeed / base.characterBody.baseMoveSpeed);
         }
         private void UpdateDirection()
         {
@@ -131,20 +133,109 @@ namespace SpaceMarine
         }
         private Vector3 GetIdealVelocity()
         {
-            return base.characterDirection.forward * base.characterBody.moveSpeed * 1.2f;
+            return base.characterDirection.forward * base.characterBody.moveSpeed;
         }
         public override void OnExit()
         {
+            if (NetworkServer.active)
+            {
+                base.characterBody.RemoveBuff(Prefabs.speed);
+            }
             base.modelLocator.normalizeToFloor = false;
             if (!base.characterMotor.disableAirControlUntilCollision)
             {
-                base.characterMotor.velocity += this.GetIdealVelocity();
+                base.characterMotor.velocity += GetIdealVelocity();
             }
+            animator.SetFloat("Utility", 1);
+            animator.SetBool("charging", false);
+            base.PlayAnimation("Gesture, Override", "ChargeMiss");
             base.OnExit();
         }
         public override InterruptPriority GetMinimumInterruptPriority()
         {
             return InterruptPriority.Frozen;
+        }
+    }
+    class UtilityImpact : BaseSkillState
+    {
+        public HealthComponent victim;
+        public override void OnSerialize(NetworkWriter writer)
+        {
+            base.OnSerialize(writer);
+            writer.Write(victim ? victim.gameObject : null);
+        }
+        public override void OnDeserialize(NetworkReader reader)
+        {
+            base.OnDeserialize(reader);
+            GameObject gameObject = reader.ReadGameObject();
+            victim = (gameObject ? gameObject.GetComponent<HealthComponent>() : null);
+        } 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            var animator = base.GetModelAnimator();
+            animator.SetFloat("Utility", 1);
+            animator.SetBool("charging", false);
+            base.PlayAnimation("Gesture, Override", "ChargeMiss");
+
+            if (NetworkServer.active)
+            {
+                if (victim)
+                {
+                    DamageInfo damageInfo = new DamageInfo
+                    {
+                        attacker = base.gameObject,
+                        damage = this.damageStat * 10,
+                        crit = base.RollCrit(),
+                        procCoefficient = 1f,
+                        damageColorIndex = DamageColorIndex.Item,
+                        damageType = DamageType.Stun1s,
+                        position = base.characterBody.corePosition
+                    };
+                    victim.TakeDamage(damageInfo);
+                    GlobalEventManager.instance.OnHitEnemy(damageInfo, victim.gameObject);
+                    GlobalEventManager.instance.OnHitAll(damageInfo, victim.gameObject);
+                }
+                base.healthComponent.TakeDamageForce(base.characterDirection.forward * -EntityStates.Toolbot.ToolbotDash.knockbackForce, true, false);
+            }
+            if (base.isAuthority)
+            {
+                base.AddRecoil(-0.5f * 1 * 3f, -0.5f * 1 * 3f, -0.5f * 1 * 8f, 0.5f * 1 * 3f);
+                EffectManager.SpawnEffect(Prefabs.impactHeavy, new EffectData() 
+                {
+                    origin = base.characterBody.corePosition, 
+                    rotation = Util.QuaternionSafeLookRotation(base.characterDirection.forward),
+                    scale = 4
+                }, true);
+                this.outer.SetNextStateToMain();
+            }
+        }
+        public override InterruptPriority GetMinimumInterruptPriority()
+        {
+            return InterruptPriority.Frozen;
+        }
+    }
+    class UtilitySwipe : MeleeSkillState
+    {
+        public override float baseAttackDuration => EntityStates.Merc.GroundLight.baseComboAttackDuration;
+        public override string layerName => "FullBody, Override";
+        public override string animationStateName => "Swipe";
+        public override string animParameter => "Utility";
+        public override string hitBoxGroupName => "Swing";
+        public override float forceMagnitude => 4800;
+        public override string swingMuzzle => "";
+        public override float damageCoefficient => 2.5f;
+        public override uint swingSound => Sounds.Play_SpaceMarine_Swing;
+        public override float baseHopVelocity => 6;
+        public override bool rootMotion => true;
+        public override float rootMotionSpeed => 42;
+        public override GameObject hitEffectPrefab => Prefabs.impact;
+        public override GameObject swingEffectPrefab => null;
+        public override DamageType damageType => DamageType.Generic;
+        public override void OnEnter()
+        {
+            base.OnEnter();
         }
     }
 }

@@ -31,6 +31,7 @@ namespace SpaceMarine
         private TeamMask mask;
         private float stopwatch;
         private float radius = 9;
+        private uint ID;
 
         public override void OnEnter()
         {
@@ -38,7 +39,7 @@ namespace SpaceMarine
 
             duration = 10 + base.characterBody.level;
 
-            areaIndicator = UnityEngine.Object.Instantiate(Prefabs.areaIndicator, base.transform.position, Quaternion.identity);
+            areaIndicator = UnityEngine.Object.Instantiate(Prefabs.areaIndicator, base.transform.position, Quaternion.identity, base.transform);
             areaIndicator.transform.localScale = Vector3.one * radius;
 
             if (NetworkServer.active)
@@ -52,16 +53,13 @@ namespace SpaceMarine
                 mask.AddTeam(TeamIndex.Player);
                 search.mask = LayerIndex.entityPrecise.mask;
             }
+
+            ID = AkSoundEngine.PostEvent(Sounds.Play_SpaceMarine_HealField, base.gameObject);
         }
         public override void FixedUpdate()
         {
             base.FixedUpdate();
             pos = base.transform.position;
-
-            if (areaIndicator)
-            {
-                areaIndicator.transform.position = pos;
-            }
 
             if (NetworkServer.active)
             {
@@ -85,6 +83,8 @@ namespace SpaceMarine
         }
         public override void OnExit()
         {
+            AkSoundEngine.StopPlayingID(ID);
+            AkSoundEngine.PostEvent(Sounds.Play_SpaceMarine_HealField_End, base.gameObject);
             if (areaIndicator)
             {
                 Destroy(areaIndicator);

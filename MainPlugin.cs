@@ -219,6 +219,12 @@ namespace SpaceMarine
             KinematicCharacterMotor kinematicCharacterMotor = characterPrefab.GetComponent<KinematicCharacterMotor>();
             kinematicCharacterMotor.CharacterController = characterMotor;
 
+            var MECH_spine = childLocator.FindChild("MECH_spine");
+            childLocator.FindChild("rig_spine").parent = MECH_spine;   
+            childLocator.FindChild("rig_spine1").parent = MECH_spine;
+
+            //childLocator.FindChild("spinetop").parent = childLocator.FindChild("tweak");
+
             var ragdollMaterial = Addressables.LoadAssetAsync<PhysicMaterial>("RoR2/Base/Common/physmatRagdoll.physicMaterial").WaitForCompletion();
             List<Transform> transforms = new List<Transform>();
             List<string> boneNames = new List<string>()
@@ -228,17 +234,17 @@ namespace SpaceMarine
                 "DEF_hipLegstretch.L",
                 "DEF_leg_upper.L",
                 "DEF_leg_lower.L",
-                "DEF_foot.L",
-                "DEF_hipRegstretch.R",
+                //"DEF_foot.L",
+                "DEF_hipLegstretch.R",
                 "DEF_leg_upper.R",
                 "DEF_leg_lower.R",
-                "DEF_foot.R",
+                //"DEF_foot.R",
                 "MECH_spine",
                 "MECH_spine_1",
                 "rig_spine_2",
-                "spine_top",
-                "DEF_neck",
-                "DEF_head",
+                //"spine_top",
+                //"DEF_neck",
+                //"DEF_head",
                 "TWEAK_spine_2",
                 "DEF_spine_2",
                 "DEF_collar_L",
@@ -249,7 +255,7 @@ namespace SpaceMarine
                 "DEF_arm_upper.R",
                 "DEF_arm_lower.R",
                 //"DEF_hand.R",
-                "DEF_wpn_bolter_grip"
+                //"DEF_wpn_bolter_grip"
             };
             foreach (Transform t in model.GetComponentsInChildren<Transform>(true))
             {
@@ -265,7 +271,12 @@ namespace SpaceMarine
                     }
                     var bonecollider = g.AddComponent<CapsuleCollider>();
                     bonecollider.radius = 0.4f;
-                    bonecollider.height = 3.75f;
+                    bonecollider.height = 3.7f;
+                    if (name == "BASE" || name == "rig_spine_2" || name == "TWEAK_spine_2" || name == "DEF_hipLegstretch.L" || name == "DEF_hipLegstretch.R" || name == "DEF_spine_2" || name == "spine_top")
+                    {
+                        bonecollider.radius = 0.5f;
+                        bonecollider.height = 0.5f;
+                    }
                     bonecollider.material = ragdollMaterial;
                     bonecollider.sharedMaterial = ragdollMaterial;
                     Rigidbody parentRigidBody = t.parent.GetComponent<Rigidbody>();
@@ -281,7 +292,8 @@ namespace SpaceMarine
             var ragdoll = model.AddComponent<RagdollController>();
             ragdoll.bones = transforms.ToArray();
 
-            Utils.CreateHitbox("Dash", model.transform, Vector3.one * 8, new Vector3(0, 1.2f, 2));
+            Utils.CreateHitbox("Swing", model.transform, new Vector3(5.2f, 6.5f, 9), new Vector3(0, 1.2f, 3.5f));
+            Utils.CreateHitbox("Dash", model.transform, new Vector3(5, 6, 5), new Vector3(0, 1.2f, 1));
 
             characterPrefab.GetComponent<Interactor>().maxInteractionDistance = 3f;
             characterPrefab.GetComponent<InteractionDriver>().highlightInteractor = true;
@@ -377,6 +389,8 @@ namespace SpaceMarine
             ContentAddition.AddEntityState<Primary>(out hmm);
             ContentAddition.AddEntityState<Secondary>(out hmm);
             ContentAddition.AddEntityState<Utility>(out hmm);
+            ContentAddition.AddEntityState<UtilityImpact>(out hmm);
+            ContentAddition.AddEntityState<UtilitySwipe>(out hmm);
             ContentAddition.AddEntityState<Special>(out hmm);
             ContentAddition.AddEntityState<CharacterMain>(out hmm);
             ContentAddition.AddEntityState<PassiveBarrier>(out hmm);
@@ -446,9 +460,9 @@ namespace SpaceMarine
         {
             SkillLocator component = characterPrefab.GetComponent<SkillLocator>();
             LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC", "Iron Resolve");//<style=cIsDamage></style> <style=cIsUtility></style> <style=cIsHealth></style> <style=cIsHealing></style> 
-            LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", "Become <style=cIsDamage>immune</style> to knockback effects, and create a regeneration field around yourself that <style=cIsHealing>heals 10%</style> of your <style=cIsHealing>max health</style> per second for <style=cIsUtility>6s + 0.1s</style> per level.");
+            LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", "Become <style=cIsDamage>immune</style> to knockback effects, and create a regeneration field around yourself that <style=cIsHealing>heals 5%</style> of your <style=cIsHealing>max health</style> every <style=cIsUtility>2s</style> for <style=cIsUtility>10s + level</style>.");
 
-            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Special), "Slide", 1, 30f, true, false, false, InterruptPriority.Any, true, true, false, 1, 1, 1,
+            var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Special), "Slide", 1, 30f, true, false, false, InterruptPriority.Any, false, true, false, 1, 1, 1,
                 Assets.MainAssetBundle.LoadAsset<Sprite>("special"), SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", SURVIVORNAMEKEY + "_SPEC");
             component.special = Utils.NewGenericSkill(characterPrefab, SkillDef);
 

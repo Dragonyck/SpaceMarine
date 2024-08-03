@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 763505371
+CRC: 4184283167
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0680afe9f009a0dec3228f80242d20b0
+    Hash: b7f74a48d66aa5712b137b1e85311beb
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4bcc24e66bd7027be1075086f217b5da
@@ -71,6 +71,7 @@ Assets:
 - Assets/SpaceMarineAssets/animations/animator.controller
 - Assets/SpaceMarineAssets/icons/special.png
 - Assets/SpaceMarineAssets/icons/utility.png
+- Assets/SpaceMarineAssets/icons/pulseMask.png
 - Assets/SpaceMarineAssets/grenade.prefab
 - Assets/SpaceMarineAssets/animations/aim.mask
 - Assets/SpaceMarineAssets/icons/skinIcon.png

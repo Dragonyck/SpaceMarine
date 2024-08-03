@@ -42,11 +42,13 @@ namespace SpaceMarine
         public virtual bool hopOnHit => true;
         public virtual bool rootMotion => true;
         public virtual bool rootMotionWhileHitting => false;
+        public virtual bool forceFire => false;
         public virtual uint swingSound => 0;
         public virtual DamageType damageType => DamageType.Generic;
         public virtual DamageColorIndex damageColor => DamageColorIndex.Default;
         public virtual Vector3 bonusForce => Vector3.zero;
         public virtual GameObject hitEffectPrefab => null;
+        public virtual float maxAttackSpeedScaling => 6;
         private bool hopped;
         private bool hasSwung;
         public bool isInHitPause;
@@ -65,7 +67,7 @@ namespace SpaceMarine
         public override void OnEnter()
         {
             base.OnEnter();
-            attackSpeedScaling = Math.Min(base.attackSpeedStat, 6);
+            attackSpeedScaling = Math.Min(base.attackSpeedStat, maxAttackSpeedScaling);
             attackDuration = baseAttackDuration / attackSpeedScaling;
             earlyExitDuration = baseEarlyExitDuration / attackSpeedScaling;
             hitPauseDuration = EntityStates.Merc.GroundLight.hitPauseDuration / attackSpeedScaling;
@@ -165,7 +167,7 @@ namespace SpaceMarine
         public bool FireMeleeAttack(OverlapAttack attack, Animator animator, string mecanimHitboxActiveParameter, float forceMagnitude, Vector3 bonusForce)
         {
             bool result = false;
-            if (animator && animator.GetFloat(mecanimHitboxActiveParameter) > 0.1f)
+            if (animator && animator.GetFloat(mecanimHitboxActiveParameter) > 0.1f || forceFire)
             {
                 attack.forceVector = base.characterDirection ? base.characterDirection.forward : base.transform.forward * forceMagnitude + bonusForce;
                 result = attack.Fire(hitList);

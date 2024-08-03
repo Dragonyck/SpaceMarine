@@ -14,6 +14,8 @@ namespace SpaceMarine
         public static readonly uint Play_SpaceMarine_Bolt_Fire = 3371325911;
         public static readonly uint Play_SpaceMarine_Impact_Heavy = 3441669515;
         public static readonly uint Play_SpaceMarine_Footsteps = 4015382410;
-
+        public static readonly uint Play_SpaceMarine_Swing = 1899423449;
+        public static readonly uint Play_SpaceMarine_HealField = 2119041049;
+        public static readonly uint Play_SpaceMarine_HealField_End = 818088731;
     }
 }

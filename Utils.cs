@@ -266,7 +266,7 @@ namespace SpaceMarine
             hitBoxGroup1.groupName = name;
             return hitboxTransform1;
         }
-        internal static EffectComponent RegisterEffect(GameObject effect, float duration, string soundName = "", bool parentToReferencedTransform = true, bool positionAtReferencedTransform = true)
+        internal static EffectComponent RegisterEffect(GameObject effect, float duration, string soundName = "", bool applyScale = false, bool parentToReferencedTransform = true, bool positionAtReferencedTransform = true)
         {
             var effectcomponent = effect.GetComponent<EffectComponent>();
             if (!effectcomponent)
@@ -293,7 +293,7 @@ namespace SpaceMarine
             {
                 effect.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
             }
-            effectcomponent.applyScale = false;
+            effectcomponent.applyScale = applyScale;
             effectcomponent.effectIndex = EffectIndex.Invalid;
             effectcomponent.parentToReferencedTransform = parentToReferencedTransform;
             effectcomponent.positionAtReferencedTransform = positionAtReferencedTransform;

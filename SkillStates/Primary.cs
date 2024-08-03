@@ -76,7 +76,7 @@ namespace SpaceMarine
                     sniper = false,
                     stopperMask = LayerIndex.CommonMasks.bullet,
                     weapon = null,
-                    tracerEffectPrefab = Prefabs.Load<GameObject>("RoR2/Junk/Commando/TracerBarrage.prefab"),
+                    tracerEffectPrefab = Prefabs.tracer,
                     spreadPitchScale = 1f,
                     spreadYawScale = 1f,
                     hitEffectPrefab = Prefabs.Load<GameObject>("RoR2/Base/Common/VFX/OmniImpactVFX.prefab"),
