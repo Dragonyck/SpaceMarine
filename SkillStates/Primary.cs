@@ -68,7 +68,7 @@ namespace SpaceMarine
                     maxSpread = spread,
                     isCrit = base.RollCrit(),
                     owner = base.gameObject,
-                    muzzleName = "smgMuzzle",
+                    muzzleName = "gunMuzzle",
                     smartCollision = false,
                     procChainMask = default(ProcChainMask),
                     procCoefficient = 1,
