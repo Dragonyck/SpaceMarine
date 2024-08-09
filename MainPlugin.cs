@@ -71,11 +71,11 @@ namespace SpaceMarine
             ModelBase.transform.parent = characterPrefab.transform;
             ModelBase.transform.localPosition = new Vector3(0f, -0.94f, 0f);
             ModelBase.transform.localRotation = Quaternion.identity;
-            ModelBase.transform.localScale = new Vector3(1f, 1f, 1f);
+            ModelBase.transform.localScale = Vector3.one * 1.25f;
 
             GameObject gameObject3 = new GameObject("AimOrigin");
             gameObject3.transform.parent = ModelBase.transform;
-            gameObject3.transform.localPosition = new Vector3(0f, 1.4f, 0f);
+            gameObject3.transform.localPosition = new Vector3(0f, 1.6f, 0f);
             gameObject3.transform.localRotation = Quaternion.identity;
             gameObject3.transform.localScale = Vector3.one;
 
@@ -449,7 +449,7 @@ namespace SpaceMarine
         {
             SkillLocator component = characterPrefab.GetComponent<SkillLocator>();
             LanguageAPI.Add(SURVIVORNAMEKEY + "_UTIL", "Charge");//<style=cIsDamage></style> <style=cIsUtility></style> <style=cIsHealth></style> <style=cIsHealing></style> 
-            LanguageAPI.Add(SURVIVORNAMEKEY + "_UTIL_DESCRIPTION", "<style=cIsUtility>Heavy</style>. Charge forward gaining <style=cIsUtility>200% movement speed</style>. Deals <style=cIsDamage>250% damage</style> to enemies. Hitting a large enemy stops the charge and deals <style=cIsDamage>1000% damage</style>.");
+            LanguageAPI.Add(SURVIVORNAMEKEY + "_UTIL_DESCRIPTION", "<style=cIsUtility>Heavy</style>. Charge forward gaining <style=cIsUtility>50% movement speed</style>. Deals <style=cIsDamage>300% damage</style> to enemies. Hitting a large enemy stops the charge and deals <style=cIsDamage>1200% damage</style>. Can be canceled prematurely, swiping forward and dealing <style=cIsDamage>300% damage</style>.");
 
             var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Utility), "Body", 1, 5f, true, false, false, InterruptPriority.Any, true, true, false, 1, 1, 1,
                 Assets.MainAssetBundle.LoadAsset<Sprite>("utility"), SURVIVORNAMEKEY + "_UTIL_DESCRIPTION", SURVIVORNAMEKEY + "_UTIL");
@@ -460,7 +460,7 @@ namespace SpaceMarine
         {
             SkillLocator component = characterPrefab.GetComponent<SkillLocator>();
             LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC", "Iron Resolve");//<style=cIsDamage></style> <style=cIsUtility></style> <style=cIsHealth></style> <style=cIsHealing></style> 
-            LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", "Become <style=cIsDamage>immune</style> to knockback effects, and create a regeneration field around yourself that <style=cIsHealing>heals 5%</style> of your <style=cIsHealing>max health</style> every <style=cIsUtility>2s</style> for <style=cIsUtility>10s + level</style>.");
+            LanguageAPI.Add(SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", "Become <style=cIsDamage>immune</style> to knockback effects, and create a regeneration field around yourself that <style=cIsHealing>heals 10%</style> of your <style=cIsHealing>max health</style> every <style=cIsUtility>2s</style> for <style=cIsUtility>10s + level</style>.");
 
             var SkillDef = Utils.NewSkillDef<SkillDef>(typeof(Special), "Slide", 1, 30f, true, false, false, InterruptPriority.Any, false, true, false, 1, 1, 1,
                 Assets.MainAssetBundle.LoadAsset<Sprite>("special"), SURVIVORNAMEKEY + "_SPEC_DESCRIPTION", SURVIVORNAMEKEY + "_SPEC");

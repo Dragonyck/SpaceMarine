@@ -34,7 +34,7 @@ namespace SpaceMarine
         {
             if (sender.HasBuff(Prefabs.speed))
             {
-                args.moveSpeedMultAdd += 1;
+                args.moveSpeedMultAdd += 0.5f;
             }
         }
         private static void HealthComponent_TakeDamageForce_Vector3_bool_bool(On.RoR2.HealthComponent.orig_TakeDamageForce_Vector3_bool_bool orig, HealthComponent self, Vector3 force, bool alwaysApply, bool disableAirControlUntilCollision)

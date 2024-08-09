@@ -39,7 +39,7 @@ namespace SpaceMarine
             {
                 base.fixedAge = 0;
 
-                base.healthComponent.AddBarrier(base.healthComponent.fullCombinedHealth * ((base.characterBody.level * 2) / 100));
+                base.healthComponent.AddBarrier(base.healthComponent.fullCombinedHealth * (0.01f * base.characterBody.level));
             }
         }
     }

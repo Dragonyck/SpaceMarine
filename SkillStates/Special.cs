@@ -71,7 +71,7 @@ namespace SpaceMarine
                     search.origin = pos;
                     foreach (HurtBox h in search.RefreshCandidates().FilterCandidatesByHurtBoxTeam(mask).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes())
                     {
-                        h.healthComponent.Heal(base.healthComponent.fullCombinedHealth * 0.025f, default);
+                        h.healthComponent.Heal(base.healthComponent.fullCombinedHealth * 0.1f, default);
                         h.healthComponent.body.AddTimedBuff(Prefabs.knockback, 1.5f);
                     }
                 }

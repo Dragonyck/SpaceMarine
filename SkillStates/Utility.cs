@@ -28,13 +28,14 @@ namespace SpaceMarine
         public override float baseAttackDuration => 3;
         public override string animParameter => "Utility";
         public override float forceMagnitude => 2600;
-        public override float damageCoefficient => 2.5f;
+        public override float damageCoefficient => 3f;
         public override GameObject hitEffectPrefab => Prefabs.impact;
         public override GameObject swingEffectPrefab => null;
         public override DamageType damageType => DamageType.Generic;
         public override string hitBoxGroupName => "Dash";
         public override float maxAttackSpeedScaling => 1;
         public override bool forceFire => false;
+        public override bool rootMotion => false;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -78,6 +79,10 @@ namespace SpaceMarine
                     {
                         base.characterMotor.rootMotion += GetIdealVelocity() * Time.fixedDeltaTime;
                     }
+                }
+                else
+                {
+                    base.characterMotor.velocity = Vector3.zero;
                 }
 
                 if (base.skillLocator.special && base.inputBank.skill4.down)
@@ -186,7 +191,7 @@ namespace SpaceMarine
                     DamageInfo damageInfo = new DamageInfo
                     {
                         attacker = base.gameObject,
-                        damage = this.damageStat * 10,
+                        damage = this.damageStat * 12,
                         crit = base.RollCrit(),
                         procCoefficient = 1f,
                         damageColorIndex = DamageColorIndex.Item,
@@ -225,7 +230,7 @@ namespace SpaceMarine
         public override string hitBoxGroupName => "Swing";
         public override float forceMagnitude => 4800;
         public override string swingMuzzle => "";
-        public override float damageCoefficient => 2.5f;
+        public override float damageCoefficient => 3f;
         public override uint swingSound => Sounds.Play_SpaceMarine_Swing;
         public override float baseHopVelocity => 6;
         public override bool rootMotion => true;
