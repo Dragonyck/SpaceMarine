@@ -36,6 +36,7 @@ namespace SpaceMarine
         public override float maxAttackSpeedScaling => 1;
         public override bool forceFire => false;
         public override bool rootMotion => false;
+        private CameraTargetParams.AimRequest request;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -56,6 +57,8 @@ namespace SpaceMarine
             {
                 base.characterBody.AddBuff(Prefabs.speed);
             }
+
+            request = base.cameraTargetParams.RequestAimType(CameraTargetParams.AimType.Aura);
         }
         public override void FixedUpdate()
         {
@@ -142,6 +145,10 @@ namespace SpaceMarine
         }
         public override void OnExit()
         {
+            if (base.cameraTargetParams)
+            {
+                request.Dispose();  
+            }
             if (NetworkServer.active)
             {
                 base.characterBody.RemoveBuff(Prefabs.speed);

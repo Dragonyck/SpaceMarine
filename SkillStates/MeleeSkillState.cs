@@ -48,7 +48,7 @@ namespace SpaceMarine
         public virtual DamageColorIndex damageColor => DamageColorIndex.Default;
         public virtual Vector3 bonusForce => Vector3.zero;
         public virtual GameObject hitEffectPrefab => null;
-        public virtual float maxAttackSpeedScaling => 6;
+        public virtual float maxAttackSpeedScaling => 5.95f;
         private bool hopped;
         private bool hasSwung;
         public bool isInHitPause;

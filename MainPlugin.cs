@@ -218,6 +218,7 @@ namespace SpaceMarine
 
             KinematicCharacterMotor kinematicCharacterMotor = characterPrefab.GetComponent<KinematicCharacterMotor>();
             kinematicCharacterMotor.CharacterController = characterMotor;
+            kinematicCharacterMotor.playerCharacter = true;
 
             var MECH_spine = childLocator.FindChild("MECH_spine");
             childLocator.FindChild("rig_spine").parent = MECH_spine;   
