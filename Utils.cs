@@ -183,9 +183,9 @@ namespace SpaceMarine
         {
             return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 128);
         }
-        internal static LoadoutAPI.SkinDefInfo CreateNewSkinDefInfo(GameObject rootObject, string skinName, CharacterModel.RendererInfo[] rendererInfos, UnlockableDef unlockableDef = null)
+        internal static SkinDefInfo CreateNewSkinDefInfo(GameObject rootObject, string skinName, CharacterModel.RendererInfo[] rendererInfos, UnlockableDef unlockableDef = null)
         {
-            LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            SkinDefInfo skinDefInfo = default(SkinDefInfo);
             skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
             skinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             skinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];

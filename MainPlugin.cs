@@ -26,7 +26,7 @@ namespace SpaceMarine
 {
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency(R2API.LanguageAPI.PluginGUID)]
-    [BepInDependency(R2API.LoadoutAPI.PluginGUID)]
+    [BepInDependency(R2API.Skins.PluginGUID)]
     [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
     [BepInDependency(R2API.PrefabAPI.PluginGUID)]
     [BepInDependency(R2API.SoundAPI.PluginGUID)]
@@ -185,7 +185,7 @@ namespace SpaceMarine
             characterModel.baseRendererInfos = rendererInfos;
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
-            characterModel.temporaryOverlays = new List<TemporaryOverlay>();
+            characterModel.temporaryOverlays = new List<TemporaryOverlayInstance>();
             characterModel.mainSkinnedMeshRenderer = renderers[0];
 
             LanguageAPI.Add(SURVIVORNAMEKEY + "BODY_DEFAULT_SKIN_NAME", "Default");
@@ -193,7 +193,7 @@ namespace SpaceMarine
             var modelSkinController = model.AddComponent<ModelSkinController>();
             modelSkinController.skins = new SkinDef[]
             {
-                LoadoutAPI.CreateNewSkinDef(Utils.CreateNewSkinDefInfo(model, SURVIVORNAMEKEY + "BODY_DEFAULT_SKIN_NAME", rendererInfos))
+                Skins.CreateNewSkinDef(Utils.CreateNewSkinDefInfo(model, SURVIVORNAMEKEY + "BODY_DEFAULT_SKIN_NAME", rendererInfos))
             };
 
             Collider[] colliders = model.GetComponentsInChildren<Collider>();

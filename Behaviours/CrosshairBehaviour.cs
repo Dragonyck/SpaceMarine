@@ -40,7 +40,7 @@ namespace SpaceMarine
             if (input)
             {
                 float num = 0f;
-                RaycastHit raycastHit;
+                RaycastHit raycastHit; 
                 bool hit = Physics.Raycast(CameraRigController.ModifyAimRayIfApplicable(input.GetAimRay(), base.gameObject, out num), out raycastHit, 250 + num, LayerIndex.entityPrecise.mask);
                 off.SetActive(!hit);
                 on.SetActive(hit);
